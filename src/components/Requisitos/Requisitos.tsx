@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Accordion, Button, Form } from "react-bootstrap";
 import { useTemplateStore } from "../../context/TemplateContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import type { UserStory, Requisito } from "../../type";
 import StoryCard from "./UserStory/UserStory";
 
@@ -133,19 +133,38 @@ export default function Requisitos() {
                     }
                   }}
                   style={{ maxWidth: 300, display: "inline-block" }}
-                  onClick={(e) => e.stopPropagation()} // <- Evita abrir o accordion!
+                  onClick={(e) => e.stopPropagation()}
                 />
               ) : (
-                <span
-                  onDoubleClick={(e) => {
-                    e.stopPropagation(); // <- Impede o accordion de abrir!
-                    setEditandoTituloIdx(idx);
-                    setTituloTemp(req.titulo);
-                  }}
-                  style={{ cursor: "pointer" }}
-                  title="Clique duplo para editar"
-                >
-                  {req.titulo}
+                <span className="d-flex align-items-center">
+                  <span className="me-2">{req.titulo}</span>
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className="ms-1"
+                    style={{
+                      color: "#888",
+                      cursor: "pointer",
+                      padding: "2px 5px",
+                      borderRadius: "3px",
+                      outline: "none",
+                    }}
+                    title="Editar título"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditandoTituloIdx(idx);
+                      setTituloTemp(req.titulo);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setEditandoTituloIdx(idx);
+                        setTituloTemp(req.titulo);
+                      }
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPen} />
+                  </span>
                 </span>
               )}
             </Accordion.Header>

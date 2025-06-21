@@ -22,7 +22,10 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
         className="d-flex justify-content-between align-items-center"
       >
         <div>
-          <FontAwesomeIcon icon={open ? faChevronDown : faChevronRight} className="me-2" />
+          <FontAwesomeIcon
+            icon={open ? faChevronDown : faChevronRight}
+            className="me-2"
+          />
           <span className="fw-bold">
             {story.userStory
               ? story.userStory.slice(0, 48)
@@ -30,6 +33,7 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
           </span>
         </div>
         <Button
+          className="no-border"
           variant="outline-danger"
           size="sm"
           onClick={(e) => {
@@ -66,7 +70,9 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
                 as="textarea"
                 rows={2}
                 value={story.introducao}
-                onChange={(e) => onChange({ ...story, introducao: e.target.value })}
+                onChange={(e) =>
+                  onChange({ ...story, introducao: e.target.value })
+                }
               />
             </Form.Group>
             <Row>
@@ -76,7 +82,9 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
                   <Form.Control
                     type="text"
                     value={story.sistema}
-                    onChange={(e) => onChange({ ...story, sistema: e.target.value })}
+                    onChange={(e) =>
+                      onChange({ ...story, sistema: e.target.value })
+                    }
                   />
                 </Form.Group>
               </Col>
@@ -86,7 +94,9 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
                   <Form.Control
                     type="text"
                     value={story.caminho}
-                    onChange={(e) => onChange({ ...story, caminho: e.target.value })}
+                    onChange={(e) =>
+                      onChange({ ...story, caminho: e.target.value })
+                    }
                   />
                 </Form.Group>
               </Col>
@@ -97,41 +107,11 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
                 as="textarea"
                 rows={2}
                 value={story.regrasHTML}
-                onChange={(e) => onChange({ ...story, regrasHTML: e.target.value })}
+                onChange={(e) =>
+                  onChange({ ...story, regrasHTML: e.target.value })
+                }
               />
             </Form.Group>
-            <Row>
-              <Col md={4}>
-                <Form.Group className="mb-2">
-                  <Form.Label>Função</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={story.funcName}
-                    onChange={(e) => onChange({ ...story, funcName: e.target.value })}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group className="mb-2">
-                  <Form.Label>Path</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={story.path}
-                    onChange={(e) => onChange({ ...story, path: e.target.value })}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group className="mb-2">
-                  <Form.Label>Descrição da Função</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={story.descFunc}
-                    onChange={(e) => onChange({ ...story, descFunc: e.target.value })}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
             <Form.Group>
               <Form.Check
                 label="Possui funcionalidade associada"
@@ -141,6 +121,47 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
                 }
               />
             </Form.Group>
+
+            {story.temFuncionalidade && (
+              <Row>
+                <Col md={4}>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Nome da Funcionalidade</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={story.funcName}
+                      onChange={(e) =>
+                        onChange({ ...story, funcName: e.target.value })
+                      }
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Caminho no Menu</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={story.path}
+                      onChange={(e) =>
+                        onChange({ ...story, path: e.target.value })
+                      }
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Descrição</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={story.descFunc}
+                      onChange={(e) =>
+                        onChange({ ...story, descFunc: e.target.value })
+                      }
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            )}
           </Card.Body>
         </div>
       </Collapse>
