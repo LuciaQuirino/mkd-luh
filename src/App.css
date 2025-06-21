@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   background-color: #f8f9fa;
-  overflow: hidden !important;
+  overflow: auto !important;
 }
 
 .logo {
@@ -45,4 +45,44 @@
 
 .no-border {
   border: none !important;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden !important;  /* O body nunca rola */
+}
+
+/* O root do React */
+#root {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;  /* nunca deve rolar aqui */
+}
+
+/* Container scrollável da aplicação */
+.app-scrollable-main {
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  background: #f8f9fa;
+  /* Você pode usar padding se quiser margem lateral/topo */
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.toolbar-lateral button[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .toolbar-lateral {
+    display: none; /* Esconde em telas pequenas, se quiser */
+  }
 }
