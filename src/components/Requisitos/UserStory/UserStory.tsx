@@ -3,6 +3,9 @@ import { Form, Button, Row, Col, Card, Collapse } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import type { UserStory } from "../../../type";
+import StoryRegrasModal from "./StoryRegrasModal";
+
+import "./UserStory.css";
 
 type Props = {
   story: UserStory;
@@ -13,6 +16,19 @@ type Props = {
 
 export default function StoryCard({ story, onChange, onRemove, index }: Props) {
   const [open, setOpen] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const [tempRegras, setTempRegras] = useState(story.regrasHTML);
+
+  function abreModal() {
+    setTempRegras(story.regrasHTML);
+    setShowModal(true);
+  }
+
+  function salvaModal() {
+    onChange({ ...story, regrasHTML: tempRegras });
+    setShowModal(false);
+  }
 
   return (
     <Card className="mb-2">
@@ -101,17 +117,11 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
                 </Form.Group>
               </Col>
             </Row>
-            <Form.Group className="mb-2">
-              <Form.Label>Regras de Negócio (HTML permitido)</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={2}
-                value={story.regrasHTML}
-                onChange={(e) =>
-                  onChange({ ...story, regrasHTML: e.target.value })
-                }
-              />
-            </Form.Group>
+
+            <div className="mb-2">
+              <StoryRegrasModal story={story} onChange={onChange} />
+            </div>
+
             <Form.Group>
               <Form.Check
                 label="Possui funcionalidade associada"

@@ -1,0 +1,46 @@
+.rsw-toolbar {
+  font-size: 13px !important;
+  min-height: 30px !important;
+}
+
+.rsw-editor {
+  resize: none !important;
+  min-height: 80px;
+  max-height: 350px;
+  overflow: hidden !important;
+}
+
+.rsw-ce div {
+    font-size: 18px !important
+}
+
+.modal-alta-regras .modal-dialog {
+  max-width: 80vw;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.modal-alta-regras .modal-content {
+  min-height: 70vh;
+  max-height: 88vh;
+}
+
+.editor-wrapper {
+  position: relative;
+  height: 60vh;
+  min-height: 360px;
+}
+
+.editor-wrapper .rsw-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #fff;
+}
+
+.editor-wrapper .rsw-editor {
+  height: 52vh;
+  min-height: 260px;
+  max-height: 52vh;
+  resize: vertical;
+}
