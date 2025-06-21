@@ -2,25 +2,77 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChevronDown,
   faChevronUp,
-  faBoxArchive,
+  faChevronDown,
+  faListUl,
   faFileExport,
   faFileImport,
+  faBoxArchive,
   faClipboard,
   faTrash,
-  faListUl,
+  faEye
 } from "@fortawesome/free-solid-svg-icons";
+import { useTemplateStore } from "../context/TemplateContext";
+import SumarioModal from "../common/SumarioModal";
 
-export default function ToolbarFlutuante({ arquivados = 0 }) {
+function MenuButton({ icon, label, disabled = false, style = {}, onClick = () => {} }) {
+  return (
+    <Button
+      variant="secondary"
+      disabled={disabled}
+      style={{
+        background: "#23272F",
+        border: "none",
+        opacity: 0.9,
+        color: disabled ? "#aaa" : "#fff",
+        fontWeight: 400,
+        fontSize: 16,
+        borderRadius: 8,
+        textAlign: "left",
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "6px 12px",
+        cursor: disabled ? "not-allowed" : "pointer",
+        ...style,
+      }}
+      tabIndex={-1}
+      onClick={disabled ? undefined : onClick}
+    >
+      {icon && (
+        <FontAwesomeIcon
+          icon={icon}
+          style={{ marginRight: 8, opacity: 0.75 }}
+        />
+      )}
+      {label}
+    </Button>
+  );
+}
+
+export default function ToolbarFlutuante() {
   const [open, setOpen] = useState(false);
+  const [showSumario, setShowSumario] = useState(false);
+
+  const { template } = useTemplateStore();
+
+  function handleSelecionarRequisito(idx) {
+    setShowSumario(false);
+    setTimeout(() => {
+      const el = document.getElementById(`requisito-${idx}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.dispatchEvent(new CustomEvent("abrirAccordion"));
+      }
+    }, 300);
+  }
 
   return (
     <div
       style={{
         position: "fixed",
-        right: 20,
-        bottom: 40,
+        right: 24,
+        bottom: 17,
         zIndex: 1100,
         display: "flex",
         flexDirection: "column",
@@ -34,7 +86,6 @@ export default function ToolbarFlutuante({ arquivados = 0 }) {
           borderRadius: "50%",
           width: 48,
           height: 48,
-          boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
           marginBottom: 8,
           display: "flex",
           alignItems: "center",
@@ -63,7 +114,12 @@ export default function ToolbarFlutuante({ arquivados = 0 }) {
             marginTop: 6,
           }}
         >
-          <MenuButton icon={faListUl} label="Sumário" disabled />
+          <MenuButton
+            icon={faListUl}
+            label="Sumário"
+            onClick={() => setShowSumario(true)}
+          />
+          <MenuButton icon={faEye} label="Visualizar" disabled />
           <MenuButton icon={faFileExport} label="Exportar JSON" disabled />
           <MenuButton icon={faFileImport} label="Importar JSON" disabled />
           <MenuButton icon={faBoxArchive} label="Arquivar" disabled />
@@ -76,68 +132,22 @@ export default function ToolbarFlutuante({ arquivados = 0 }) {
             }
             disabled
           />
-          <MenuButton
-            icon={faClipboard}
-            label="Copiar"
-            disabled
-          />
+          <MenuButton icon={faClipboard} label="Copiar" disabled />
           <MenuButton
             icon={faTrash}
             label={<span style={{ color: "#e55353" }}>Limpar templates</span>}
             style={{ marginTop: 8, border: "none", background: "transparent" }}
             disabled
           />
-          <div
-            style={{
-              fontSize: 11,
-              color: "#ccc",
-              marginTop: 16,
-              textAlign: "center",
-            }}
-          >
-            Desenvolvido por Lúcia Quirino
-          </div>
         </div>
       )}
+
+      <SumarioModal
+        show={showSumario}
+        onClose={() => setShowSumario(false)}
+        requisitos={template.requisitos}
+        onSelecionar={handleSelecionarRequisito}
+      />
     </div>
-  );
-}
-
-type MenuButtonProps = {
-  icon: any;
-  label: any;
-  disabled?: boolean;
-  style?: React.CSSProperties;
-};
-
-// Botão de menu estilizado
-function MenuButton({ icon, label, disabled = false, style = {} }: MenuButtonProps) {
-  return (
-    <Button
-      variant="secondary"
-      disabled={disabled}
-      style={{
-        background: "#23272F",
-        border: "none",
-        opacity: 0.9,
-        color: disabled ? "#aaa" : "#fff",
-        fontWeight: 400,
-        fontSize: 16,
-        borderRadius: 8,
-        textAlign: "left",
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        padding: "6px 12px",
-        cursor: disabled ? "not-allowed" : "pointer",
-        ...style,
-      }}
-      tabIndex={-1}
-    >
-      {icon && (
-        <FontAwesomeIcon icon={icon} style={{ marginRight: 8, opacity: 0.75 }} />
-      )}
-      {label}
-    </Button>
   );
 }

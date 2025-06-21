@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Accordion, Button, Form } from "react-bootstrap";
 import { useTemplateStore } from "../../context/TemplateContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,11 +8,42 @@ import StoryCard from "./UserStory/UserStory";
 
 export default function Requisitos() {
   const { template, setTemplate } = useTemplateStore();
+  const [openIdx, setOpenIdx] = useState(template.requisitos.length > 0 ? 0 : null);
+
+  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   const [editandoTituloIdx, setEditandoTituloIdx] = useState<number | null>(
     null
   );
   const [tituloTemp, setTituloTemp] = useState("");
+
+  useEffect(() => {
+    itemsRef.current = itemsRef.current.slice(0, template.requisitos.length);
+
+    template.requisitos.forEach((_, idx) => {
+      const el = document.getElementById(`requisito-${idx}`);
+      if (el) {
+        el.addEventListener("abrirAccordion", () => {
+          setOpenIdx(idx);
+          setTimeout(() => {
+            window.scrollBy({ top: -80, behavior: "smooth" });
+          }, 300);
+        });
+      }
+    });
+
+    // cleanup
+    return () => {
+      template.requisitos.forEach((_, idx) => {
+        const el = document.getElementById(`requisito-${idx}`);
+        if (el) el.removeEventListener("abrirAccordion", () => setOpenIdx(idx));
+      });
+    };
+  }, [template.requisitos.length]);
+
+  function toggleAccordion(idx) {
+    setOpenIdx(openIdx === idx ? null : idx);
+  }
 
   function salvarTitulo(idx: number) {
     setTemplate((prev) => {
@@ -112,10 +143,20 @@ export default function Requisitos() {
         </Button>
       </Form.Group>
 
-      <Accordion alwaysOpen>
+      <Accordion
+        activeKey={openIdx !== null ? String(openIdx) : null}
+        alwaysOpen
+      >
         {template.requisitos.map((req, idx) => (
-          <Accordion.Item eventKey={String(idx)} key={idx}>
-            <Accordion.Header>
+          <Accordion.Item
+            eventKey={String(idx)}
+            key={idx}
+            id={`requisito-${idx}`}
+            ref={(el) => {
+              itemsRef.current[idx] = el;
+            }}
+          >
+            <Accordion.Header onClick={() => toggleAccordion(idx)}>
               {editandoTituloIdx === idx ? (
                 <Form.Control
                   value={tituloTemp}
@@ -183,7 +224,6 @@ export default function Requisitos() {
                   <span className="ms-1">Remover requisito</span>
                 </Button>
               </div>
-
               <Button
                 type="button"
                 variant="outline-success"
