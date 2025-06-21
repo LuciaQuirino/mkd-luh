@@ -1,0 +1,23 @@
+/* Estilo geral da scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Fundo da scrollbar */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Thumb (a barrinha que desliza) */
+::-webkit-scrollbar-thumb {
+  background-color: #6c757d; /* cinza-bootstrap */
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Ao passar o mouse */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #495057;
+}
