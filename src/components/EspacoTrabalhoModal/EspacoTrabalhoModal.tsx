@@ -180,7 +180,6 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
 
   function matchBusca(tpl) {
     const q = busca.toLowerCase();
-    // Busca por nome, projeto, escopo, análise e times
     return (
       (tpl.nome || "").toLowerCase().includes(q) ||
       (tpl.projeto || "").toLowerCase().includes(q) ||
@@ -220,13 +219,11 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
           return;
         }
 
-        // 💡 Se vier bugado, tenta extrair só os campos válidos:
         if (
           typeof data === "object" &&
           data !== null &&
           Object.keys(data).length > 25
         ) {
-          // Provavelmente veio em formato array-like, vamos filtrar as keys válidas:
           const camposValidos = [
             "id",
             "nome",
@@ -256,10 +253,8 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
           data.id =
             crypto.randomUUID?.() || (Date.now() + Math.random()).toString(36);
 
-        // Aqui você pode validar campos obrigatórios, se quiser...
-
         // Adiciona no store
-        adicionarTemplate(data);
+        adicionarTemplate({ ...data, arquivado: true });
         Swal.fire("Sucesso!", "Template importado com sucesso.", "success");
       } catch (err) {
         Swal.fire("Erro!", "Arquivo inválido.", "error");
@@ -267,7 +262,6 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
     };
     reader.readAsText(file);
 
-    // Limpa input para permitir importar o mesmo arquivo novamente
     e.target.value = "";
   }
 

@@ -113,3 +113,20 @@ export function getStorageUsage() {
     percent: ((total / (5 * 1024 * 1024)) * 100).toFixed(1), // Limite de 5MB
   };
 }
+
+export function formatarDataBR(date) {
+  if (!date) return "";
+  // Se vier string ISO: "2025-06-21"
+  if (typeof date === "string" && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    const [y, m, d] = date.split("-");
+    return `${d}/${m}/${y}`;
+  }
+  // Se for Date:
+  if (date instanceof Date) {
+    const d = String(date.getDate()).padStart(2, "0");
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const y = date.getFullYear();
+    return `${d}/${m}/${y}`;
+  }
+  return date; // fallback (caso já esteja em BR)
+}
