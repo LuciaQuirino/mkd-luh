@@ -1,12 +1,51 @@
-# React + Vite
+# 📝 mkd-luh
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Gerador de templates Markdown para documentação de requisitos e projetos, direto do navegador.
 
-Currently, two official plugins are available:
+[**Acesse aqui**](https://luciaquirino.github.io/mkd-luh/)  
+Sem cadastro, sem instalar nada, 100% offline. Feito para desenvolvedores, analistas e squads que precisam organizar requisitos de forma rápida e visual.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Principais recursos
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Templates customizáveis:** preencha campos de objetivo, escopo, versões, requisitos, histórias de usuário (user stories) e mais.
+- **Accordion dinâmico** para requisitos e stories, com edição inline.
+- **Exportação e importação** de templates (`.json`) — nunca perca seu trabalho!
+- **Sumário e visualização** do markdown antes de copiar/baixar.
+- **Espaço de trabalho:** gerencie vários templates (ativo e arquivados).
+- **Copiar Markdown** com 1 clique, pronto pra colar no GitLab, Jira ou Notion.
+- **Modo 100% local:** tudo salvo no seu navegador (`localStorage`), sem nuvem.
+- **Tema escuro automático** e UI responsiva.
+- **Easter Egg escondido** (só descobrir mexendo 👀).
+
+---
+
+## 🚀 Como usar
+
+1. Acesse:  
+   👉 [https://luciaquirino.github.io/mkd-luh/](https://luciaquirino.github.io/mkd-luh/)
+
+2. Preencha os campos do template à esquerda:
+   - Informações básicas, objetivo, versões, requisitos (RFs) e histórias.
+
+3. Use o menu lateral (botão flutuante no canto direito) para:
+   - Ver sumário dos requisitos
+   - Visualizar o Markdown final
+   - Exportar/importar espaço de trabalho (.json)
+   - Copiar ou limpar tudo
+
+4. Para trabalhar com vários templates:
+   - Clique em **Espaço de Trabalho** e arquive/desarquive, exclua ou exporte templates conforme sua necessidade.
+
+---
+
+## 🛠️ Instalação (dev)
+
+Quer rodar localmente ou contribuir?
+
+```bash
+git clone https://github.com/LuciaQuirino/mkd-luh.git
+cd mkd-luh
+npm install
+npm run dev
