@@ -5,7 +5,7 @@ import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import type { Requisito } from "../../type";
 import StoryCard from "./UserStory/UserStory";
 
-export default function Requisitos({ template, editarTemplate }) {
+export default function Requisitos({ template, onEdit }) {
   const [openIdx, setOpenIdx] = useState(template.requisitos.length > 0 ? 0 : null);
 
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -46,7 +46,7 @@ export default function Requisitos({ template, editarTemplate }) {
   function salvarTitulo(idx) {
     const requisitos = [...template.requisitos];
     requisitos[idx] = { ...requisitos[idx], titulo: tituloTemp };
-    editarTemplate(template.id, { requisitos });
+    onEdit({ requisitos });
     setEditandoTituloIdx(null);
   }
 
@@ -58,7 +58,7 @@ export default function Requisitos({ template, editarTemplate }) {
   function editarStory(idx, sIdx, newStory) {
     const requisitos = [...template.requisitos];
     requisitos[idx].stories[sIdx] = newStory;
-    editarTemplate(template.id, { requisitos });
+    onEdit({ requisitos });
   }
 
   function getNovoRequisitoTitulo(requisitos: Requisito[]) {
@@ -68,7 +68,7 @@ export default function Requisitos({ template, editarTemplate }) {
 
   function adicionarRequisito() {
     const novoTitulo = getNovoRequisitoTitulo(template.requisitos);
-    editarTemplate(template.id, {
+    onEdit({
       requisitos: [
         ...template.requisitos,
         { titulo: novoTitulo.trim(), stories: [] },
@@ -77,7 +77,7 @@ export default function Requisitos({ template, editarTemplate }) {
   }
 
   function removerRequisito(idx) {
-    editarTemplate(template.id, {
+    onEdit({
       requisitos: template.requisitos.filter((_, i) => i !== idx),
     });
   }
@@ -106,13 +106,13 @@ export default function Requisitos({ template, editarTemplate }) {
           }
         : req
     );
-    editarTemplate(template.id, { requisitos });
+    onEdit({ requisitos });
   }
 
   function removerStory(idx, storyIdx) {
     const requisitos = [...template.requisitos];
     requisitos[idx].stories.splice(storyIdx, 1);
-    editarTemplate(template.id, { requisitos });
+    onEdit({ requisitos });
   }
 
   return (

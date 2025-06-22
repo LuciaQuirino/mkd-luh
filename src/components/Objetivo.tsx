@@ -8,22 +8,22 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function Objetivo({ template, editarTemplate }) {
+export default function Objetivo({ template, onEdit }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [itemForaDoEscopo, setItemForaDoEscopo] = useState("");
 
   function adicionarItem() {
     if (itemForaDoEscopo.trim() === "") return;
-    editarTemplate(template.id, {
-      foraEscopo: [...(template.foraEscopo || []), itemForaDoEscopo.trim()]
+    onEdit({
+      foraEscopo: [...(template.foraEscopo || []), itemForaDoEscopo.trim()],
     });
     setItemForaDoEscopo("");
     inputRef.current?.focus();
   }
 
   function removerItem(index) {
-    editarTemplate(template.id, {
-      foraEscopo: (template.foraEscopo || []).filter((_, i) => i !== index)
+    onEdit({
+      foraEscopo: (template.foraEscopo || []).filter((_, i) => i !== index),
     });
   }
 
@@ -38,9 +38,7 @@ export default function Objetivo({ template, editarTemplate }) {
           as="textarea"
           rows={3}
           value={template.objetivo || ""}
-          onChange={(e) =>
-            editarTemplate(template.id, { objetivo: e.target.value })
-          }
+          onChange={e => onEdit({ objetivo: e.target.value })}
         />
       </Form.Group>
 

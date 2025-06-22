@@ -1,0 +1,8 @@
+.card .badge-info, .badge.bg-info {
+  background: #23c6e7;
+  color: #fff;
+}
+
+.card-title {
+  font-size: 1.1rem;
+}

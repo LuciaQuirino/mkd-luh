@@ -16,7 +16,7 @@ const timesDisponiveis = [
   "B2B",
 ];
 
-export default function CamposBasicos({ template, editarTemplate }) {
+export default function CamposBasicos({ template, onEdit }) {
   const options = timesDisponiveis.map((time) => ({
     value: time,
     label: time,
@@ -33,7 +33,7 @@ export default function CamposBasicos({ template, editarTemplate }) {
             (template.times ?? []).includes(opt.value)
           )}
           onChange={(selected) =>
-            editarTemplate(template.id, { times: selected.map((s) => s.value) })
+            onEdit({ times: selected.map((s) => s.value) })
           }
           className="basic-multi-select"
           classNamePrefix="select"
@@ -45,15 +45,12 @@ export default function CamposBasicos({ template, editarTemplate }) {
 
       <Form.Group className="mb-3">
         <Form.Label>
-          <FontAwesomeIcon icon={faThumbtack} className="me-2" /> Nome do
-          Projeto
+          <FontAwesomeIcon icon={faThumbtack} className="me-2" /> Nome do Projeto
         </Form.Label>
         <Form.Control
           type="text"
           value={template.projeto}
-          onChange={(e) =>
-            editarTemplate(template.id, { projeto: e.target.value })
-          }
+          onChange={(e) => onEdit({ projeto: e.target.value })}
         />
       </Form.Group>
 
@@ -65,7 +62,7 @@ export default function CamposBasicos({ template, editarTemplate }) {
               type="text"
               value={template.escopoProjeto}
               onChange={(e) =>
-                editarTemplate(template.id, {
+                onEdit({
                   escopoProjeto: e.target.value.startsWith("#")
                     ? e.target.value
                     : "#" + e.target.value,
@@ -82,7 +79,7 @@ export default function CamposBasicos({ template, editarTemplate }) {
               value={template.analiseRequisitos}
               onChange={(e) => {
                 const valor = e.target.value;
-                editarTemplate(template.id, {
+                onEdit({
                   analiseRequisitos: valor.startsWith("#")
                     ? valor
                     : "#" + valor,

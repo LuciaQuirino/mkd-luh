@@ -26,7 +26,7 @@ export type Versao = {
 
 export type TemplatesState = {
   templates: MarkdownFormData[];
-  ativo: string;
+  ativo: string | null; 
 };
 
 export type MarkdownFormData = {

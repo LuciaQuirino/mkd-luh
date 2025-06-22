@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 import CamposBasicos from "./components/CamposBasicos";
 import VersoesTemplate from "./components/VersoesTemplate";
 import Objetivo from "./components/Objetivo";
@@ -9,16 +10,34 @@ import { useTemplateStore } from "./context/TemplateContext";
 import './App.css';
 
 export default function App() {
-  const { state, editarTemplate } = useTemplateStore();
+  const { state, editarTemplate, adicionarTemplate } = useTemplateStore();
   const templateAtivo = state.templates.find(t => t.id === state.ativo);
 
-  if (!templateAtivo) {
-    return (
-      <div className="text-center mt-5">
-        Nenhum template ativo encontrado.<br />
-        Crie um novo pelo Espaço de Trabalho.
-      </div>
-    );
+  const templateMock = {
+    nome: "",
+    versao: "",
+    data: new Date().toISOString().split("T")[0],
+    autor: "",
+    alteracoes: "",
+    versoes: [],
+    objetivo: "",
+    projeto: "",
+    escopoProjeto: "#",
+    analiseRequisitos: "#",
+    foraEscopo: [],
+    times: [],
+    requisitos: [],
+    arquivado: false,
+  };
+
+  function handleEdit(dados) {
+    if (!templateAtivo) {
+      const id =
+        crypto.randomUUID?.() || (Date.now() + Math.random()).toString(36);
+      adicionarTemplate({ ...templateMock, ...dados, id });
+    } else {
+      editarTemplate(templateAtivo.id, dados);
+    }
   }
 
   return (
@@ -38,20 +57,34 @@ export default function App() {
           style={{
             flex: 1,
             overflowY: "auto",
-            minHeight: 0, 
+            minHeight: 0,
           }}
         >
           <h1 className="h4">Gerador de Markdown</h1>
-          <CamposBasicos template={templateAtivo} editarTemplate={editarTemplate} />
+          <CamposBasicos
+            template={templateAtivo || templateMock}
+            onEdit={handleEdit}
+          />
           <hr />
-          <VersoesTemplate template={templateAtivo} editarTemplate={editarTemplate} />
+          <VersoesTemplate
+            template={templateAtivo || templateMock}
+            onEdit={handleEdit}
+          />
           <hr />
-          <Objetivo template={templateAtivo} editarTemplate={editarTemplate} />
+          <Objetivo
+            template={templateAtivo || templateMock}
+            onEdit={handleEdit}
+          />
           <hr />
-          <Requisitos template={templateAtivo} editarTemplate={editarTemplate} />
+          <Requisitos
+            template={templateAtivo || templateMock}
+            onEdit={handleEdit}
+          />
         </div>
       </div>
-      <ToolbarLateral arquivados={state.templates.filter(t => t.arquivado).length} />
+      <ToolbarLateral
+        arquivados={state.templates.filter((t) => t.arquivado).length}
+      />
     </div>
   );
 }

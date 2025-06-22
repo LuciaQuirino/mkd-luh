@@ -10,18 +10,17 @@ import {
   faPen
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function Versoes({ template, editarTemplate }) {
+export default function Versoes({ template, onEdit }) {
   const [versao, setVersao] = useState("1.0.0");
   const [data, setData] = useState(new Date().toISOString().split("T")[0]);
   const [autor, setAutor] = useState("");
   const [alteracoes, setAlteracoes] = useState("");
 
   function adicionarVersao() {
-    console.log(versao,data,autor );
     if (!versao || !data || !autor) return;
     
     const nova = { versao, data, autor, alteracoes };
-    editarTemplate(template.id, { versoes: [...template.versoes, nova] });
+    onEdit({ versoes: [...template.versoes, nova] });
     setVersao("");
     setData(new Date().toISOString().split("T")[0]);
     setAutor("");
@@ -31,7 +30,7 @@ export default function Versoes({ template, editarTemplate }) {
   function removerVersao(index: number) {
     const novas = [...template.versoes];
     novas.splice(index, 1);
-    editarTemplate(template.id, { versoes: novas });
+    onEdit({ versoes: novas });
   }
 
   return (

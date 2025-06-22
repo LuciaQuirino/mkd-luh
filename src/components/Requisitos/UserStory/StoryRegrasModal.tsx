@@ -26,19 +26,6 @@ export default function StoryRegrasModal({ story, onChange }) {
     return txt.value;
   }
 
-  // Preview formatado (remove tags, limita chars)
-  function getPreview(html: string) {
-    // Remove tags, decodifica entidades, limita chars
-    const plain = decodeHtml(html.replace(/<[^>]+>/g, ""))
-      .replace(/\s+/g, " ")
-      .trim();
-    return plain.length > 60
-      ? plain.slice(0, 60) + "..."
-      : plain || (
-          <span className="text-muted">Clique para adicionar regras</span>
-        );
-  }
-
   return (
     <div className="mb-2">
       <Form.Label>Regras de Negócio</Form.Label>

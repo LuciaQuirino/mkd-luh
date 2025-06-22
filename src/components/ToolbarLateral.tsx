@@ -149,8 +149,10 @@ export default function ToolbarLateral({ arquivados = 0 }) {
         onSelecionar={handleSelecionarRequisito}
       />
 
-      {/* Aqui você coloca o modal de workspace quando criar */}
-      {/* <EspacoTrabalhoModal show={showEspacoTrabalho} onClose={() => setShowEspacoTrabalho(false)} /> */}
+      <EspacoTrabalhoModal
+        show={showEspacoTrabalho}
+        onClose={() => setShowEspacoTrabalho(false)}
+      />
     </div>
   );
 }

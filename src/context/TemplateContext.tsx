@@ -47,7 +47,12 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+      const json = JSON.stringify(state);
+      localStorage.setItem(STORAGE_KEY, json);
+    } catch (err) {
+      console.error("Falha ao salvar no localStorage:", err, state);
+    }
   }, [state]);
 
   // Funções CRUD
@@ -69,20 +74,43 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
   }
 
   function removerTemplate(id: string) {
-    setState(prev => {
-      const novos = prev.templates.filter(t => t.id !== id);
-      const novoAtivo = (prev.ativo === id && novos.length)
-        ? novos[0].id
-        : prev.ativo;
-      return { templates: novos, ativo: novoAtivo };
+    setState((prev) => {
+      const templates = prev.templates.filter((t) => t.id !== id);
+      // Se excluiu o ativo, reseta ativo para null
+      const novoAtivo = prev.ativo === id ? null : prev.ativo;
+      return {
+        ...prev,
+        templates,
+        ativo: novoAtivo,
+      };
     });
   }
 
   function arquivarTemplate(id: string) {
-    editarTemplate(id, { arquivado: true });
+    setState((prev) => {
+      const templates = prev.templates.map((t) =>
+        t.id === id ? { ...t, arquivado: true } : t
+      );
+      return {
+        ...prev,
+        templates,
+        ativo: null,
+      };
+    });
   }
+
   function desarquivarTemplate(id: string) {
-    editarTemplate(id, { arquivado: false });
+    setState((prev) => {
+      // Arquiva todos menos o novo ativo
+      const templates = prev.templates.map((t) =>
+        t.id === id ? { ...t, arquivado: false } : { ...t, arquivado: true }
+      );
+      return {
+        ...prev,
+        templates,
+        ativo: id,
+      };
+    });
   }
 
   function trocarTemplateAtivo(id: string) {
