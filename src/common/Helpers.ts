@@ -1,0 +1,98 @@
+import TurndownService from 'turndown';
+
+const turndown = new TurndownService();
+
+export function gerarMarkdownDoTemplate(template) {
+  if (!template) return '';
+
+  turndown.addRule("heading", {
+    filter: ["h1", "h2", "h3", "h4", "h5", "h6"],
+    replacement: function (content, node) {
+      var hLevel = Number(node.nodeName.charAt(1));
+      var prefix = "#".repeat(hLevel);
+      return `\n\n${prefix} ${content}\n\n`;
+    },
+  });
+
+  const timesSelecionados = (template.times || []).map(i => `[${i}]`).join(' - ');
+
+  const historicoVersoes =
+  (template.versoes || []).length > 0
+    ? `
+| Versão | Data | Autor | Alterações |
+|--------|------|-------|------------|
+${template.versoes
+  .map(
+    (v) =>
+      `| ${v.versao || '-'} | ${v.data || '-'} | ${v.autor || '-'} | ${v.alteracoes || '-'} |`
+  )
+  .join('\n')}
+`
+    : '*Nenhuma versão cadastrada*';
+
+  const foraEscopo =
+    (template.foraEscopo || []).length > 0
+      ? (template.foraEscopo || []).map((e) => `- ${e}`).join('\n')
+      : '*Nenhum item fora do escopo*';
+
+  // REQUISITOS
+  let requisitosMd = '';
+  (template.requisitos || []).forEach((requisito, i) => {
+    requisitosMd += `\n\n**${requisito.titulo || `Requisito ${i + 1}`}**\n\n`;
+    (requisito.stories || []).forEach((story, j) => {
+      const regrasMarkdown = story.regrasHTML
+        ? turndown.turndown(story.regrasHTML).trim()
+        : "";
+
+        requisitosMd += `
+
+**${story.userStory || "-"}**
+
+${story.introducao || ""}
+- **Sistema:** ${story.sistema || "-"}
+- **Caminho:** ${story.caminho || "-"}
+${regrasMarkdown ? `- **Regras:**\n${regrasMarkdown}` : ""}
+`;
+
+if (story.temFuncionalidade) {
+  requisitosMd += `
+**Funcionalidade**
+| Nome da Funcionalidade | Caminho no Menu do Sistema/Perfil | Descrição |
+|------------------------|------------------------------------|-----------|
+| ${story.funcName || ""} | ${story.path || ""} | ${story.descFunc || ""} |
+`;
+}
+
+// espaçamento extra
+requisitosMd += '\n\n\n';
+
+
+    });
+  });
+
+  if (!requisitosMd.trim()) requisitosMd = "*Nenhum requisito cadastrado*";
+
+  return `
+# ${template.nome || ''}
+
+${timesSelecionados ? `**Times:** ${timesSelecionados}\n` : ''}
+**Projeto:** ${template.projeto || '-'}  
+**Escopo do Projeto:** ${template.escopoProjeto || '-'}  
+**Análise de Requisitos:** ${template.analiseRequisitos || '-'}
+
+## Controle de Versões
+
+${historicoVersoes}
+
+## Objetivo
+
+${template.objetivo || '*'}
+
+## Itens fora do escopo
+
+${foraEscopo}
+
+## Requisitos
+${requisitosMd}
+  `.trim();
+}

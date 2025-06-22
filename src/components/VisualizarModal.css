@@ -1,0 +1,19 @@
+/* Você pode adicionar isso em App.css, ou num css só do modal */
+.markdown-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 1rem;
+}
+
+.markdown-preview th,
+.markdown-preview td {
+  border: 1px solid #aaa;
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.markdown-preview th {
+  background: #f5f5f5;
+  font-weight: bold;
+}

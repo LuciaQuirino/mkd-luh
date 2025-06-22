@@ -6,3 +6,15 @@
 .card-title {
   font-size: 1.1rem;
 }
+
+.scroll-coluna {
+  max-height: 52vh;
+  min-height: 500px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.content-filter {
+  align-items: baseline;
+  justify-content: space-between;
+}

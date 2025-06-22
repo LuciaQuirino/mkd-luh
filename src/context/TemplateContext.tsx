@@ -34,8 +34,11 @@ type TemplateContextType = {
   removerTemplate: (id: string) => void;
   arquivarTemplate: (id: string) => void;
   desarquivarTemplate: (id: string) => void;
+  limparTemplates: () => void;
   trocarTemplateAtivo: (id: string) => void;
   reordenarTemplates: (fromIdx: number, toIdx: number) => void;
+  importarTemplates: (novos: MarkdownFormData[]) => void;
+  exportarTemplates?: () => MarkdownFormData[];
 };
 
 const TemplateContext = createContext<TemplateContextType | undefined>(undefined);
@@ -54,6 +57,39 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
       console.error("Falha ao salvar no localStorage:", err, state);
     }
   }, [state]);
+
+  function normalizarTemplate(t: Partial<MarkdownFormData>): MarkdownFormData {
+    return {
+      ...defaultTemplate, // Importa os campos padrão
+      ...t,
+      versoes: Array.isArray(t.versoes) ? t.versoes : [],
+      foraEscopo: Array.isArray(t.foraEscopo) ? t.foraEscopo : [],
+      times: Array.isArray(t.times) ? t.times : [],
+      requisitos: Array.isArray(t.requisitos) ? t.requisitos : [],
+      arquivado: t.arquivado ?? false,
+    };
+  }
+
+  function importarTemplates(novos: MarkdownFormData[]) {
+    setState((prev) => {
+      const idsExistentes = new Set(prev.templates.map((t) => t.id));
+      const novosTemplates = novos.filter((t) => !idsExistentes.has(t.id));
+      if (novosTemplates.length === 0) return prev;
+
+      // Define ativo se não houver nenhum
+      const novoAtivo = prev.ativo ?? novosTemplates[0].id;
+
+      return {
+        ...prev,
+        templates: [...prev.templates, ...novosTemplates],
+        ativo: novoAtivo,
+      };
+    });
+  }
+
+  function exportarTemplates() {
+    return state.templates;
+  }
 
   // Funções CRUD
   function adicionarTemplate(template: MarkdownFormData) {
@@ -84,6 +120,14 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
         ativo: novoAtivo,
       };
     });
+  }
+
+  function limparTemplates() {
+    setState({
+      templates: [],
+      ativo: null,
+    });
+    localStorage.removeItem(STORAGE_KEY);
   }
 
   function arquivarTemplate(id: string) {
@@ -137,7 +181,10 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
         arquivarTemplate,
         desarquivarTemplate,
         trocarTemplateAtivo,
+        limparTemplates,
         reordenarTemplates,
+        exportarTemplates,
+        importarTemplates
       }}
     >
       {children}
