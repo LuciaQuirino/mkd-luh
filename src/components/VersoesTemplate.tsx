@@ -14,6 +14,8 @@ import {
   faPen
 } from "@fortawesome/free-solid-svg-icons";
 
+import "./VersoesTemplate.css";
+
 export default function Versoes({ template, onEdit }) {
   const [versao, setVersao] = useState("1.0.0");
   const [data, setData] = useState<Date | null>(new Date());
@@ -37,7 +39,7 @@ export default function Versoes({ template, onEdit }) {
     };
 
     onEdit({ versoes: [...template.versoes, nova] });
-    setVersao("");
+    setVersao("1.0.0");
     setData(data);
     setAutor("");
     setAlteracoes("");
@@ -65,7 +67,7 @@ export default function Versoes({ template, onEdit }) {
           </Form.Group>
         </div>
         <div className="col-md-3">
-          <Form.Group className="mb-2">
+          <Form.Group className="mb-2 w-100">
             <Form.Label className="me-1 d-flex align-items-center">
               <FontAwesomeIcon icon={faCalendar} className="me-1" /> Data
             </Form.Label>
