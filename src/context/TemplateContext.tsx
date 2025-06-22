@@ -111,7 +111,7 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
 
   function removerTemplate(id: string) {
     setState((prev) => {
-      const templates = prev.templates.filter((t) => t.id !== id);
+      const templates = (prev.templates || []).filter((t) => t.id !== id);
       // Se excluiu o ativo, reseta ativo para null
       const novoAtivo = prev.ativo === id ? null : prev.ativo;
       return {

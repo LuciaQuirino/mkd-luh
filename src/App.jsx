@@ -110,7 +110,7 @@ export default function App() {
         </div>
       </div>
       <ToolbarLateral
-        arquivados={state.templates.filter((t) => t.arquivado).length}
+        arquivados={(state.templates || []).filter((t) => t.arquivado).length}
       />
     </div>
   );
