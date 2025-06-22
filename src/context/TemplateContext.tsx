@@ -95,7 +95,7 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
   function adicionarTemplate(template: MarkdownFormData) {
     setState(prev => ({
       ...prev,
-      templates: [...prev.templates, template],
+      templates: [...(prev.templates || []), template],
       ativo: template.id, // já ativa o novo
     }));
   }
