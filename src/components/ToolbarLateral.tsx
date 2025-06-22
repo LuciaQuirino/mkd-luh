@@ -62,7 +62,7 @@ export default function ToolbarLateral({ arquivados = 0 }) {
 
   const [showVisualizar, setShowVisualizar] = useState(false);
 
-  const templateAtivo = state.templates.find((t) => t.id === state.ativo);
+  const templateAtivo = (state.templates || []).find((t) => t.id === state.ativo);
 
   function getMarkdownAtivo() {
     if (!templateAtivo) return "Nenhum template ativo!";
