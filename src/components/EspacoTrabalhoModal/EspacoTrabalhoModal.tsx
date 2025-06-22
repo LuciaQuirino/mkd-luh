@@ -288,7 +288,7 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
                 template={ativo}
                 ativo={true}
                 onArquivar={() => {
-                  if (state.templates.length >= 10) {
+                  if ((state.templates || []).length >= 10) {
                     Swal.fire({
                       icon: "warning",
                       title: "Limite atingido!",

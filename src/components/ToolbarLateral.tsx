@@ -179,7 +179,7 @@ export default function ToolbarLateral({ arquivados = 0 }) {
               <small>
                 Espaço de Trabalho{" "}
                 <small style={{ opacity: 0.7 }}>
-                  ({state.templates.length})
+                  ({(state.templates || []).length})
                 </small>
               </small>
             }
@@ -235,7 +235,7 @@ export default function ToolbarLateral({ arquivados = 0 }) {
             icon={faFileExport}
             label="Exportar espaço de trabalho"
             onClick={handleExportarTodos}
-            disabled={state.templates.length === 0}
+            disabled={(state.templates.length || []) === 0}
           />
           <MenuButton
             icon={faTrash}
@@ -251,7 +251,7 @@ export default function ToolbarLateral({ arquivados = 0 }) {
               background: "transparent",
             }}
             onClick={handleLimparTemplates}
-            disabled={state.templates.length === 0}
+            disabled={(state.templates.length || []) === 0}
           />
         </div>
       )}

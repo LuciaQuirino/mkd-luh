@@ -72,7 +72,7 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
 
   function importarTemplates(novos: MarkdownFormData[]) {
     setState((prev) => {
-      const idsExistentes = new Set(prev.templates.map((t) => t.id));
+      const idsExistentes = new Set((prev.templates || []).map((t) => t.id));
       const novosTemplates = novos.filter((t) => !idsExistentes.has(t.id));
       if (novosTemplates.length === 0) return prev;
 
@@ -81,7 +81,7 @@ export function TemplateProvider({ children }: { children: React.ReactNode }) {
 
       return {
         ...prev,
-        templates: [...prev.templates, ...novosTemplates],
+        templates: [...(prev.templates || []), ...novosTemplates],
         ativo: novoAtivo,
       };
     });
