@@ -266,7 +266,7 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
   }
 
   return (
-    <Modal show={show} onHide={onClose} size="lg" centered>
+    <Modal show={show} onHide={onClose} size="lg" centered style={{ overflow: "hidden" }}>
       <Modal.Header closeButton>
         <Modal.Title>Espaço de Trabalho</Modal.Title>
       </Modal.Header>
