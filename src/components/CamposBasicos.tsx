@@ -1,7 +1,5 @@
-import React from "react";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
-import { useTemplateStore } from "../context/TemplateContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbtack } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,9 +16,7 @@ const timesDisponiveis = [
   "B2B",
 ];
 
-export default function CamposBasicos() {
-  const { template, salvar } = useTemplateStore();
-
+export default function CamposBasicos({ template, editarTemplate }) {
   const options = timesDisponiveis.map((time) => ({
     value: time,
     label: time,
@@ -33,9 +29,11 @@ export default function CamposBasicos() {
         <Select
           isMulti
           options={options}
-          value={options.filter((opt) => (template.times ?? []).includes(opt.value))}
+          value={options.filter((opt) =>
+            (template.times ?? []).includes(opt.value)
+          )}
           onChange={(selected) =>
-            salvar({ times: selected.map((s) => s.value) })
+            editarTemplate(template.id, { times: selected.map((s) => s.value) })
           }
           className="basic-multi-select"
           classNamePrefix="select"
@@ -46,11 +44,16 @@ export default function CamposBasicos() {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label><FontAwesomeIcon icon={faThumbtack} className="me-2" /> Nome do Projeto</Form.Label>
+        <Form.Label>
+          <FontAwesomeIcon icon={faThumbtack} className="me-2" /> Nome do
+          Projeto
+        </Form.Label>
         <Form.Control
           type="text"
           value={template.projeto}
-          onChange={(e) => salvar({ projeto: e.target.value })}
+          onChange={(e) =>
+            editarTemplate(template.id, { projeto: e.target.value })
+          }
         />
       </Form.Group>
 
@@ -62,7 +65,7 @@ export default function CamposBasicos() {
               type="text"
               value={template.escopoProjeto}
               onChange={(e) =>
-                salvar({
+                editarTemplate(template.id, {
                   escopoProjeto: e.target.value.startsWith("#")
                     ? e.target.value
                     : "#" + e.target.value,
@@ -77,13 +80,14 @@ export default function CamposBasicos() {
             <Form.Control
               type="text"
               value={template.analiseRequisitos}
-              onChange={(e) =>
-                salvar({
-                  analiseRequisitos: e.target.value.startsWith("#")
-                    ? e.target.value
-                    : "#" + e.target.value,
-                })
-              }
+              onChange={(e) => {
+                const valor = e.target.value;
+                editarTemplate(template.id, {
+                  analiseRequisitos: valor.startsWith("#")
+                    ? valor
+                    : "#" + valor,
+                });
+              }}
             />
           </Form.Group>
         </div>

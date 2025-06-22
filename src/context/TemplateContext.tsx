@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import type { MarkdownFormData } from "../type";
+import type { MarkdownFormData, TemplatesState } from "../type";
 import { STORAGE_KEY } from '../consts';
 
-// Estado inicial padrão
+// Template base
 const defaultTemplate: MarkdownFormData = {
+  id: "1",
+  nome: "Template principal",
   versao: "",
   data: new Date().toISOString().split("T")[0],
   autor: "",
@@ -16,38 +18,100 @@ const defaultTemplate: MarkdownFormData = {
   foraEscopo: [],
   times: [],
   requisitos: [],
+  arquivado: false,
 };
 
+const defaultState: TemplatesState = {
+  templates: [defaultTemplate],
+  ativo: "1",
+};
+
+// Contexto: tipagem das funções novas
 type TemplateContextType = {
-  template: MarkdownFormData;
-  setTemplate: React.Dispatch<React.SetStateAction<MarkdownFormData>>;
-  limpar: () => void;
-  salvar: (dados: Partial<MarkdownFormData>) => void;
+  state: TemplatesState;
+  adicionarTemplate: (t: MarkdownFormData) => void;
+  editarTemplate: (id: string, dados: Partial<MarkdownFormData>) => void;
+  removerTemplate: (id: string) => void;
+  arquivarTemplate: (id: string) => void;
+  desarquivarTemplate: (id: string) => void;
+  trocarTemplateAtivo: (id: string) => void;
+  reordenarTemplates: (fromIdx: number, toIdx: number) => void;
 };
 
 const TemplateContext = createContext<TemplateContextType | undefined>(undefined);
 
 export function TemplateProvider({ children }: { children: React.ReactNode }) {
-  const [template, setTemplate] = useState<MarkdownFormData>(() => {
+  const [state, setState] = useState<TemplatesState>(() => {
     const local = localStorage.getItem(STORAGE_KEY);
-    return local ? JSON.parse(local) : defaultTemplate;
+    return local ? JSON.parse(local) : defaultState;
   });
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(template));
-  }, [template]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
 
-  function limpar() {
-    setTemplate({ ...defaultTemplate });
-    localStorage.removeItem(STORAGE_KEY);
+  // Funções CRUD
+  function adicionarTemplate(template: MarkdownFormData) {
+    setState(prev => ({
+      ...prev,
+      templates: [...prev.templates, template],
+      ativo: template.id, // já ativa o novo
+    }));
   }
 
-  function salvar(dados: Partial<MarkdownFormData>) {
-    setTemplate((prev) => ({ ...prev, ...dados }));
+  function editarTemplate(id: string, dados: Partial<MarkdownFormData>) {
+    setState(prev => ({
+      ...prev,
+      templates: prev.templates.map(t =>
+        t.id === id ? { ...t, ...dados } : t
+      ),
+    }));
   }
 
+  function removerTemplate(id: string) {
+    setState(prev => {
+      const novos = prev.templates.filter(t => t.id !== id);
+      const novoAtivo = (prev.ativo === id && novos.length)
+        ? novos[0].id
+        : prev.ativo;
+      return { templates: novos, ativo: novoAtivo };
+    });
+  }
+
+  function arquivarTemplate(id: string) {
+    editarTemplate(id, { arquivado: true });
+  }
+  function desarquivarTemplate(id: string) {
+    editarTemplate(id, { arquivado: false });
+  }
+
+  function trocarTemplateAtivo(id: string) {
+    setState(prev => ({ ...prev, ativo: id }));
+  }
+
+  function reordenarTemplates(fromIdx: number, toIdx: number) {
+    setState(prev => {
+      const items = [...prev.templates];
+      const [moved] = items.splice(fromIdx, 1);
+      items.splice(toIdx, 0, moved);
+      return { ...prev, templates: items };
+    });
+  }
+
+  // Context value
   return (
-    <TemplateContext.Provider value={{ template, setTemplate, limpar, salvar }}>
+    <TemplateContext.Provider
+      value={{
+        state,
+        adicionarTemplate,
+        editarTemplate,
+        removerTemplate,
+        arquivarTemplate,
+        desarquivarTemplate,
+        trocarTemplateAtivo,
+        reordenarTemplates,
+      }}
+    >
       {children}
     </TemplateContext.Provider>
   );

@@ -24,7 +24,14 @@ export type Versao = {
   alteracoes: string;
 };
 
+export type TemplatesState = {
+  templates: MarkdownFormData[];
+  ativo: string;
+};
+
 export type MarkdownFormData = {
+  id: string;
+  nome?: string;
   versao: string;
   data: string;
   autor: string;
@@ -37,4 +44,5 @@ export type MarkdownFormData = {
   foraEscopo: string[];
   times: string[];
   requisitos: Requisito[];
+  arquivado?: boolean;
 };

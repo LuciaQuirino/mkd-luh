@@ -1,13 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Accordion, Button, Form } from "react-bootstrap";
-import { useTemplateStore } from "../../context/TemplateContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
-import type { UserStory, Requisito } from "../../type";
+import type { Requisito } from "../../type";
 import StoryCard from "./UserStory/UserStory";
 
-export default function Requisitos() {
-  const { template, setTemplate } = useTemplateStore();
+export default function Requisitos({ template, editarTemplate }) {
   const [openIdx, setOpenIdx] = useState(template.requisitos.length > 0 ? 0 : null);
 
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -45,12 +43,10 @@ export default function Requisitos() {
     setOpenIdx(openIdx === idx ? null : idx);
   }
 
-  function salvarTitulo(idx: number) {
-    setTemplate((prev) => {
-      const requisitos = [...prev.requisitos];
-      requisitos[idx] = { ...requisitos[idx], titulo: tituloTemp };
-      return { ...prev, requisitos };
-    });
+  function salvarTitulo(idx) {
+    const requisitos = [...template.requisitos];
+    requisitos[idx] = { ...requisitos[idx], titulo: tituloTemp };
+    editarTemplate(template.id, { requisitos });
     setEditandoTituloIdx(null);
   }
 
@@ -59,12 +55,10 @@ export default function Requisitos() {
     return titulo.split(" ")[0] || "RF00";
   }
 
-  function editarStory(idx: number, sIdx: number, newStory: UserStory) {
-    setTemplate((prev) => {
-      const requisitos = [...prev.requisitos];
-      requisitos[idx].stories[sIdx] = newStory;
-      return { ...prev, requisitos };
-    });
+  function editarStory(idx, sIdx, newStory) {
+    const requisitos = [...template.requisitos];
+    requisitos[idx].stories[sIdx] = newStory;
+    editarTemplate(template.id, { requisitos });
   }
 
   function getNovoRequisitoTitulo(requisitos: Requisito[]) {
@@ -74,60 +68,51 @@ export default function Requisitos() {
 
   function adicionarRequisito() {
     const novoTitulo = getNovoRequisitoTitulo(template.requisitos);
-    setTemplate((prev) => ({
-      ...prev,
+    editarTemplate(template.id, {
       requisitos: [
-        ...prev.requisitos,
+        ...template.requisitos,
         { titulo: novoTitulo.trim(), stories: [] },
       ],
-    }));
-  }
-
-  function removerRequisito(idx: number) {
-    setTemplate((prev) => ({
-      ...prev,
-      requisitos: prev.requisitos.filter((_, i) => i !== idx),
-    }));
-  }
-
-  function adicionarStory(idx: number) {
-    setTemplate((prev) => {
-      // Clona o array de requisitos
-      const requisitos = prev.requisitos.map((req, i) =>
-        i === idx
-          ? {
-              ...req,
-              stories: [
-                ...req.stories,
-                {
-                  userStory: `${getReqId(req.titulo)}_US${(
-                    req.stories.length + 1
-                  )
-                    .toString()
-                    .padStart(2, "0")}`,
-                  introducao: "",
-                  sistema: "",
-                  caminho: "",
-                  regrasHTML: "",
-                  funcName: "",
-                  path: "",
-                  descFunc: "",
-                  temFuncionalidade: false,
-                },
-              ],
-            }
-          : req
-      );
-      return { ...prev, requisitos };
     });
   }
 
-  function removerStory(idx: number, storyIdx: number) {
-    setTemplate((prev) => {
-      const requisitos = [...prev.requisitos];
-      requisitos[idx].stories.splice(storyIdx, 1);
-      return { ...prev, requisitos };
+  function removerRequisito(idx) {
+    editarTemplate(template.id, {
+      requisitos: template.requisitos.filter((_, i) => i !== idx),
     });
+  }
+
+  function adicionarStory(idx) {
+    const requisitos = template.requisitos.map((req, i) =>
+      i === idx
+        ? {
+            ...req,
+            stories: [
+              ...req.stories,
+              {
+                userStory: `${getReqId(req.titulo)}_US${(req.stories.length + 1)
+                  .toString()
+                  .padStart(2, "0")}`,
+                introducao: "",
+                sistema: "",
+                caminho: "",
+                regrasHTML: "",
+                funcName: "",
+                path: "",
+                descFunc: "",
+                temFuncionalidade: false,
+              },
+            ],
+          }
+        : req
+    );
+    editarTemplate(template.id, { requisitos });
+  }
+
+  function removerStory(idx, storyIdx) {
+    const requisitos = [...template.requisitos];
+    requisitos[idx].stories.splice(storyIdx, 1);
+    editarTemplate(template.id, { requisitos });
   }
 
   return (

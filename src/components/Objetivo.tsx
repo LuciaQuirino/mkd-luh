@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Form, Button, ListGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,33 +7,24 @@ import {
   faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { useTemplateStore } from "../context/TemplateContext";
 
-export default function Objetivo() {
+export default function Objetivo({ template, editarTemplate }) {
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const {
-    template: { objetivo, foraEscopo },
-    setTemplate,
-  } = useTemplateStore();
-
   const [itemForaDoEscopo, setItemForaDoEscopo] = useState("");
 
   function adicionarItem() {
     if (itemForaDoEscopo.trim() === "") return;
-    setTemplate((prev) => ({
-      ...prev,
-      foraEscopo: [...(prev.foraEscopo || []), itemForaDoEscopo.trim()],
-    }));
+    editarTemplate(template.id, {
+      foraEscopo: [...(template.foraEscopo || []), itemForaDoEscopo.trim()]
+    });
     setItemForaDoEscopo("");
     inputRef.current?.focus();
   }
 
-  function removerItem(index: number) {
-    setTemplate((prev) => ({
-      ...prev,
-      foraEscopo: (prev.foraEscopo || []).filter((_, i) => i !== index),
-    }));
+  function removerItem(index) {
+    editarTemplate(template.id, {
+      foraEscopo: (template.foraEscopo || []).filter((_, i) => i !== index)
+    });
   }
 
   return (
@@ -46,9 +37,9 @@ export default function Objetivo() {
         <Form.Control
           as="textarea"
           rows={3}
-          value={objetivo || ""}
+          value={template.objetivo || ""}
           onChange={(e) =>
-            setTemplate((prev) => ({ ...prev, objetivo: e.target.value }))
+            editarTemplate(template.id, { objetivo: e.target.value })
           }
         />
       </Form.Group>
@@ -71,7 +62,7 @@ export default function Objetivo() {
               }
             }}
             placeholder="Ex: Integração com sistema legado"
-            style={{padding: '3px'}}
+            style={{ padding: '3px' }}
           />
           <Button
             variant="outline-primary"
@@ -84,9 +75,9 @@ export default function Objetivo() {
           </Button>
         </div>
 
-        {(foraEscopo || []).length > 0 && (
+        {(template.foraEscopo || []).length > 0 && (
           <ListGroup className="mt-2">
-            {foraEscopo.map((item, idx) => (
+            {template.foraEscopo.map((item, idx) => (
               <ListGroup.Item
                 key={idx}
                 className="d-flex justify-content-between align-items-center py-1"
@@ -110,3 +101,4 @@ export default function Objetivo() {
     </div>
   );
 }
+

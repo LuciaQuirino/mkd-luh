@@ -5,15 +5,14 @@ import {
   faChevronUp,
   faChevronDown,
   faListUl,
-  faFileExport,
-  faFileImport,
-  faBoxArchive,
+  faLayerGroup,
   faClipboard,
   faTrash,
   faEye
 } from "@fortawesome/free-solid-svg-icons";
 import { useTemplateStore } from "../context/TemplateContext";
 import SumarioModal from "../common/SumarioModal";
+import EspacoTrabalhoModal from "./EspacoTrabalhoModal/EspacoTrabalhoModal";
 
 function MenuButton({ icon, label, disabled = false, style = {}, onClick = () => {} }) {
   return (
@@ -50,11 +49,13 @@ function MenuButton({ icon, label, disabled = false, style = {}, onClick = () =>
   );
 }
 
-export default function ToolbarFlutuante() {
+export default function ToolbarLateral({ arquivados = 0 }) {
   const [open, setOpen] = useState(false);
   const [showSumario, setShowSumario] = useState(false);
+  const [showEspacoTrabalho, setShowEspacoTrabalho] = useState(false);
 
-  const { template } = useTemplateStore();
+  const { state } = useTemplateStore();
+  const templateAtivo = state.templates.find(t => t.id === state.ativo);
 
   function handleSelecionarRequisito(idx) {
     setShowSumario(false);
@@ -115,23 +116,22 @@ export default function ToolbarFlutuante() {
           }}
         >
           <MenuButton
+            icon={faLayerGroup}
+            label={
+              <span>
+                Espaço de Trabalho{" "}
+                <span style={{ opacity: 0.7 }}>({state.templates.length})</span>
+              </span>
+            }
+            onClick={() => setShowEspacoTrabalho(true)}
+          />
+          <MenuButton
             icon={faListUl}
             label="Sumário"
             onClick={() => setShowSumario(true)}
+            disabled={!templateAtivo}
           />
           <MenuButton icon={faEye} label="Visualizar" disabled />
-          <MenuButton icon={faFileExport} label="Exportar JSON" disabled />
-          <MenuButton icon={faFileImport} label="Importar JSON" disabled />
-          <MenuButton icon={faBoxArchive} label="Arquivar" disabled />
-          <MenuButton
-            icon={faBoxArchive}
-            label={
-              <span>
-                Arquivados <span style={{ opacity: 0.8 }}>(0)</span>
-              </span>
-            }
-            disabled
-          />
           <MenuButton icon={faClipboard} label="Copiar" disabled />
           <MenuButton
             icon={faTrash}
@@ -145,9 +145,12 @@ export default function ToolbarFlutuante() {
       <SumarioModal
         show={showSumario}
         onClose={() => setShowSumario(false)}
-        requisitos={template.requisitos}
+        requisitos={templateAtivo?.requisitos ?? []}
         onSelecionar={handleSelecionarRequisito}
       />
+
+      {/* Aqui você coloca o modal de workspace quando criar */}
+      {/* <EspacoTrabalhoModal show={showEspacoTrabalho} onClose={() => setShowEspacoTrabalho(false)} /> */}
     </div>
   );
 }

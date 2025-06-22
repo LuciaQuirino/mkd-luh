@@ -4,10 +4,23 @@ import VersoesTemplate from "./components/VersoesTemplate";
 import Objetivo from "./components/Objetivo";
 import Requisitos from "./components/Requisitos/Requisitos";
 import ToolbarLateral from "./components/ToolbarLateral";
+import { useTemplateStore } from "./context/TemplateContext";
 
 import './App.css';
 
 export default function App() {
+  const { state, editarTemplate } = useTemplateStore();
+  const templateAtivo = state.templates.find(t => t.id === state.ativo);
+
+  if (!templateAtivo) {
+    return (
+      <div className="text-center mt-5">
+        Nenhum template ativo encontrado.<br />
+        Crie um novo pelo Espaço de Trabalho.
+      </div>
+    );
+  }
+
   return (
     <div className="min-vh-100 bg-light d-flex justify-content-center align-items-start">
       <div
@@ -29,16 +42,16 @@ export default function App() {
           }}
         >
           <h1 className="h4">Gerador de Markdown</h1>
-          <CamposBasicos />
+          <CamposBasicos template={templateAtivo} editarTemplate={editarTemplate} />
           <hr />
-          <VersoesTemplate />
+          <VersoesTemplate template={templateAtivo} editarTemplate={editarTemplate} />
           <hr />
-          <Objetivo />
+          <Objetivo template={templateAtivo} editarTemplate={editarTemplate} />
           <hr />
-          <Requisitos />
+          <Requisitos template={templateAtivo} editarTemplate={editarTemplate} />
         </div>
       </div>
-      <ToolbarLateral arquivados={0} />
+      <ToolbarLateral arquivados={state.templates.filter(t => t.arquivado).length} />
     </div>
   );
 }
