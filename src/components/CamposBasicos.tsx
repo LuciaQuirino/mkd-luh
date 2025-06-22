@@ -38,9 +38,6 @@ export default function CamposBasicos({ template, onEdit }) {
           className="basic-multi-select"
           classNamePrefix="select"
         />
-        <Form.Text className="text-muted">
-          Use Ctrl ou Shift para selecionar vários
-        </Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3">

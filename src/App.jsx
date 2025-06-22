@@ -5,12 +5,15 @@ import Objetivo from "./components/Objetivo";
 import Requisitos from "./components/Requisitos/Requisitos";
 import ToolbarLateral from "./components/ToolbarLateral";
 import { useTemplateStore } from "./context/TemplateContext";
+import EasterEggHippo from "./components/EasterEggHippo";
 
 import './App.css';
 
 export default function App() {
   const { state, editarTemplate, adicionarTemplate } = useTemplateStore();
-  const templateAtivo = state.templates.find(t => t.id === state.ativo);
+  const templateAtivo = Array.isArray(state.templates)
+    ? state.templates.find((t) => t.id === state.ativo)
+    : undefined;
 
   useEffect(() => {
     document.title = templateAtivo?.projeto
@@ -103,6 +106,7 @@ export default function App() {
             template={templateAtivo || templateMock}
             onEdit={handleEdit}
           />
+          <EasterEggHippo show={/domar/i.test(templateAtivo?.projeto || "")} />
         </div>
       </div>
       <ToolbarLateral
