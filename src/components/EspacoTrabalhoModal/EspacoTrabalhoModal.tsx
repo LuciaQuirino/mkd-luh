@@ -190,7 +190,7 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
     );
   }
 
-  const ativo = state.templates.find((t) => !t.arquivado);
+  const ativo = (state.templates || []).find((t) => !t.arquivado);
   const arquivados = (state.templates || []).filter(
     (t) => t.arquivado && matchBusca(t)
   );
