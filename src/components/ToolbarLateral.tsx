@@ -8,7 +8,7 @@ import {
   faListUl,
   faLayerGroup,
   faClipboard,
-  faFileImport,
+  faUpload,
   faFileExport,
   faTrash,
   faEye
@@ -30,7 +30,7 @@ function MenuButton({ icon, label, disabled = false, style = {}, onClick = () =>
         opacity: 0.9,
         color: disabled ? "#aaa" : "#fff",
         fontWeight: 400,
-        fontSize: 16,
+        fontSize: 12,
         borderRadius: 8,
         textAlign: "left",
         display: "flex",
@@ -224,7 +224,7 @@ export default function ToolbarLateral({ arquivados = 0 }) {
             onChange={handleImportarTodos}
           />
           <MenuButton
-            icon={faFileImport} // Ou faUpload, faFileImport...
+            icon={faUpload}
             label="Importar espaço de trabalho"
             onClick={() =>
               document.getElementById("input-importar-todos")?.click()

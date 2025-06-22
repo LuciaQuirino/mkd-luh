@@ -1,5 +1,4 @@
-import React from "react";
-import { Button } from "react-bootstrap";
+import { useEffect } from "react";
 import CamposBasicos from "./components/CamposBasicos";
 import VersoesTemplate from "./components/VersoesTemplate";
 import Objetivo from "./components/Objetivo";
@@ -12,6 +11,12 @@ import './App.css';
 export default function App() {
   const { state, editarTemplate, adicionarTemplate } = useTemplateStore();
   const templateAtivo = state.templates.find(t => t.id === state.ativo);
+
+  useEffect(() => {
+    document.title = templateAtivo?.projeto
+      ? `Markdown - ${templateAtivo.projeto}`
+      : "Markdown editor";
+  }, [templateAtivo?.projeto]);
 
   const templateMock = {
     nome: "",
@@ -60,7 +65,25 @@ export default function App() {
             minHeight: 0,
           }}
         >
-          <h1 className="h4">Gerador de Markdown</h1>
+          <h1 className="h4 d-flex align-items-center">
+            Markdown editor
+            {((templateAtivo?.times && templateAtivo.times.length > 0) ||
+              (templateMock.times && templateMock.times.length > 0)) && (
+              <span
+                className="ms-2 text-muted"
+                style={{ fontSize: "1rem", fontWeight: 400 }}
+              >
+                (
+                {templateAtivo &&
+                templateAtivo.times &&
+                templateAtivo.times.length > 0
+                  ? templateAtivo.times.join(" - ")
+                  : templateMock.times.join(" - ")}
+                )
+              </span>
+            )}
+          </h1>
+
           <CamposBasicos
             template={templateAtivo || templateMock}
             onEdit={handleEdit}

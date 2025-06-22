@@ -96,3 +96,20 @@ ${foraEscopo}
 ${requisitosMd}
   `.trim();
 }
+
+export function getStorageUsage() {
+  let total = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    total += key.length + (value ? value.length : 0);
+  }
+  // 1 char = 2 bytes em UTF-16, mas browsers geralmente contam como 1 byte para localStorage (ASCII/UTF-8)
+  // Se quiser estimar mais justo: totalBytes = total * 2;
+  return {
+    bytes: total,
+    kb: (total / 1024).toFixed(2),
+    mb: (total / (1024 * 1024)).toFixed(2),
+    percent: ((total / (5 * 1024 * 1024)) * 100).toFixed(1), // Limite de 5MB
+  };
+}

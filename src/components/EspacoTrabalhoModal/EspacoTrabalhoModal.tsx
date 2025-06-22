@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Card, Badge, Row, Col, Modal } from "react-bootstrap";
 import { useTemplateStore } from "../../context/TemplateContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getStorageUsage } from "../../common/Helpers";
 import {
   faArrowRight,
   faArrowLeft,
@@ -167,6 +168,7 @@ export function TemplateCard({
 }
 
 export default function EspacoTrabalhoModal({ show, onClose }) {
+  const storage = getStorageUsage();
   const [busca, setBusca] = useState("");
   const {
     state,
@@ -285,8 +287,28 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
               <TemplateCard
                 template={ativo}
                 ativo={true}
-                onArquivar={() => arquivarTemplate(ativo.id)}
-                onDesarquivar={() => {}} // Não mostra esse botão!
+                onArquivar={() => {
+                  if (state.templates.length >= 10) {
+                    Swal.fire({
+                      icon: "warning",
+                      title: "Limite atingido!",
+                      text: "Você atingiu o limite de 10 templates no espaço de trabalho. Limpe algum arquivado para continuar.",
+                      confirmButtonText: "Ok",
+                    });
+                    return;
+                  }
+                  arquivarTemplate(ativo.id);
+                  Swal.fire({
+                    icon: "success",
+                    title: "Template arquivado!",
+                    toast: true,
+                    position: "top-end",
+                    timer: 1200,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                  });
+                }}
+                onDesarquivar={() => {}}
                 onExcluir={() => removerTemplate(ativo.id)}
               />
             ) : (
@@ -353,7 +375,10 @@ export default function EspacoTrabalhoModal({ show, onClose }) {
           </Col>
         </Row>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className="d-flex justify-content-between align-items-center">
+        <small className="text-muted">
+          Espaço usado: {storage.mb} MB ({storage.percent}% de 5MB)
+        </small>
         <Button variant="secondary" onClick={onClose}>
           Fechar
         </Button>
