@@ -11,13 +11,15 @@ import {
   faUpload,
   faFileExport,
   faTrash,
-  faEye
+  faEye,
+  faPalette
 } from "@fortawesome/free-solid-svg-icons";
 import { useTemplateStore } from "../context/TemplateContext";
 import SumarioModal from "../common/SumarioModal";
 import EspacoTrabalhoModal from "./EspacoTrabalhoModal/EspacoTrabalhoModal";
 import VisualizarModal from "./VisualizarModal";
 import { gerarMarkdownDoTemplate } from "../common/Helpers";
+import AparenciaModal from "../common/AparenciaModal";
 
 function MenuButton({ icon, label, disabled = false, style = {}, onClick = () => {} }) {
   return (
@@ -59,6 +61,7 @@ export default function ToolbarLateral({ arquivados = 0 }) {
   const [open, setOpen] = useState(false);
   const [showSumario, setShowSumario] = useState(false);
   const [showEspacoTrabalho, setShowEspacoTrabalho] = useState(false);
+  const [showAparencia, setShowAparencia] = useState(false);
 
   const [showVisualizar, setShowVisualizar] = useState(false);
 
@@ -238,6 +241,11 @@ export default function ToolbarLateral({ arquivados = 0 }) {
             disabled={(state.templates.length || []) === 0}
           />
           <MenuButton
+            icon={faPalette}
+            label="Aparência"
+            onClick={() => setShowAparencia(true)}
+          />
+          <MenuButton
             icon={faTrash}
             label={
               <small style={{ color: "#e55353" }}>
@@ -272,6 +280,11 @@ export default function ToolbarLateral({ arquivados = 0 }) {
         show={showVisualizar}
         onClose={() => setShowVisualizar(false)}
         markdown={getMarkdownAtivo()}
+      />
+
+      <AparenciaModal
+        show={showAparencia}
+        onClose={() => setShowAparencia(false)}
       />
     </div>
   );

@@ -49,7 +49,7 @@ export default function App() {
   }
 
   return (
-    <div style={{ backgroundColor: 'rgb(68 72 81)' }} className="min-vh-100 d-flex justify-content-center align-items-start">
+    <div className="bg-app min-vh-100 d-flex justify-content-center align-items-start">
       <div
         className="card border border-secondary"
         style={{

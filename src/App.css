@@ -86,3 +86,20 @@ body, html {
     display: none; /* Esconde em telas pequenas, se quiser */
   }
 }
+
+.min-vh-100 {
+  background: var(--app-bg, #444851) !important;
+  min-height: 100vh;
+}
+
+.card {
+  background: var(--card-bg, #fff) !important;
+}
+
+.card-title, h1, h2, h3 {
+  font-family: var(--titulo-font, inherit);
+}
+
+.bg-app {
+  background: var(--app-bg, #444851) !important;
+}
