@@ -10,6 +10,7 @@ export type UserStory = {
   path: string;
   descFunc: string;
   temFuncionalidade?: boolean;
+  autoOpen?: boolean;
 };
 
 export type Requisito = {

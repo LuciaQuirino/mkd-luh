@@ -1,0 +1,74 @@
+.destacar-requisito {
+  animation: destaqueRequisito 1.2s;
+  box-shadow: 0 0 0 4px #4285f4aa;
+  z-index: 2;
+}
+
+@keyframes destaqueRequisito {
+  0%   { box-shadow: 0 0 0 8px #4285f4dd; }
+  80%  { box-shadow: 0 0 0 4px #4285f455; }
+  100% { box-shadow: 0 0 0 0px transparent; }
+}
+
+.accordion-item, .card {
+  border-radius: 12px !important;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 20px 0 #161e2d0c;
+}
+
+.accordion-header, .card-header {
+  background: linear-gradient(90deg, #113059 70%, #185abc 100%);
+  border-radius: 12px 12px 0 0 !important;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.accordion-button,
+.accordion-button:not(.collapsed) {
+  background: transparent !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+/* Ícone fica branco também */
+.accordion-header .svg-inline--fa,
+.card-header .svg-inline--fa {
+  color: #fff;
+}
+
+.accordion-body, .card-body {
+  background: #f7fafd !important;
+  border-radius: 0 0 12px 12px !important;
+  color: #09182c;
+  padding: 1.2rem 1.5rem;
+}
+
+.accordion-button:focus {
+  border-color: #0e356b;
+  box-shadow: 0 0 0 2px #227fff44;
+}
+
+.accordion-button::after {
+  background-image: none !important;
+  content: '';
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 1em 1em;
+  border: none;
+  transition: transform .2s;
+}
+
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(180deg);
+}
+
+.form-control::placeholder {
+  color: #b3bdd1 !important;
+  opacity: 1 !important;
+  font-style: italic;
+  letter-spacing: 0.3px;
+}

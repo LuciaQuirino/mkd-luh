@@ -5,8 +5,28 @@ import { faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import type { Requisito } from "../../type";
 import StoryCard from "./UserStory/UserStory";
 
+import "./Requisitos.css";
+
+const accordionListeners = {};
+
+function handleAbrirAccordion(idx, el, setOpenIdx) {
+  setOpenIdx(idx);
+  setTimeout(() => {
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
+    el.classList.add('destacar-requisito');
+    setTimeout(() => el.classList.remove('destacar-requisito'), 1200);
+  }, 300);
+}
+
 export default function Requisitos({ template, onEdit }) {
   const [openIdx, setOpenIdx] = useState(template.requisitos.length > 0 ? 0 : null);
+  const [novoIdx, setNovoIdx] = useState<number | null>(null);
+
+  const [storyOpenIdx, setStoryOpenIdx] = useState<{ [reqIdx: number]: number | null }>({});
 
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -21,26 +41,66 @@ export default function Requisitos({ template, onEdit }) {
     template.requisitos.forEach((_, idx) => {
       const el = document.getElementById(`requisito-${idx}`);
       if (el) {
-        el.addEventListener("abrirAccordion", () => {
-          setOpenIdx(idx);
-          setTimeout(() => {
-            window.scrollBy({ top: -80, behavior: "smooth" });
-          }, 300);
-        });
+        if (!accordionListeners[idx]) {
+          accordionListeners[idx] = () =>
+            handleAbrirAccordion(idx, el, setOpenIdx);
+          el.addEventListener("abrirAccordion", accordionListeners[idx]);
+        }
       }
     });
 
-    // cleanup
     return () => {
       template.requisitos.forEach((_, idx) => {
         const el = document.getElementById(`requisito-${idx}`);
-        if (el) el.removeEventListener("abrirAccordion", () => setOpenIdx(idx));
+        if (el && accordionListeners[idx]) {
+          el.removeEventListener("abrirAccordion", accordionListeners[idx]);
+          delete accordionListeners[idx];
+        }
       });
     };
   }, [template.requisitos.length]);
 
+  useEffect(() => {
+    if (novoIdx !== null && itemsRef.current[novoIdx]) {
+      itemsRef.current[novoIdx].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      itemsRef.current[novoIdx].classList.add("destacar-requisito");
+      setTimeout(
+        () => () => {
+          if (itemsRef.current[novoIdx]) {
+            itemsRef.current[novoIdx]!.classList.remove("destacar-requisito");
+          }
+        },
+        1200
+      );
+      setNovoIdx(null);
+    }
+  }, [template.requisitos.length]);
+
+
   function toggleAccordion(idx) {
     setOpenIdx(openIdx === idx ? null : idx);
+
+    setTimeout(() => {
+      itemsRef.current[idx]?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      setStoryOpenIdx((old) => ({
+        ...old,
+        [idx]: 0,
+      }));
+
+      itemsRef.current[idx]?.classList.add("destacar-requisito");
+      setTimeout(
+        () => itemsRef.current[idx]?.classList.remove("destacar-requisito"),
+        1000
+      );
+    }, 350);
   }
 
   function salvarTitulo(idx) {
@@ -68,12 +128,17 @@ export default function Requisitos({ template, onEdit }) {
 
   function adicionarRequisito() {
     const novoTitulo = getNovoRequisitoTitulo(template.requisitos);
+    const novoIdx = template.requisitos.length;
+
     onEdit({
       requisitos: [
         ...template.requisitos,
         { titulo: novoTitulo.trim(), stories: [] },
       ],
     });
+
+    setNovoIdx(novoIdx);
+    setOpenIdx(novoIdx);
   }
 
   function removerRequisito(idx) {
@@ -83,6 +148,7 @@ export default function Requisitos({ template, onEdit }) {
   }
 
   function adicionarStory(idx) {
+    const novoStoryIdx = template.requisitos[idx].stories.length; // o novo índice
     const requisitos = template.requisitos.map((req, i) =>
       i === idx
         ? {
@@ -107,6 +173,24 @@ export default function Requisitos({ template, onEdit }) {
         : req
     );
     onEdit({ requisitos });
+
+    // Aguarde o update antes de abrir a nova story
+    setTimeout(() => {
+      setStoryOpenIdx((old) => ({
+        ...old,
+        [idx]: novoStoryIdx,
+      }));
+      // Faça scroll automático se quiser
+      setTimeout(() => {
+        // Encontre o card da nova story e dê scroll
+        const storyDiv = document.getElementById(
+          `story-${idx}-${novoStoryIdx}`
+        );
+        if (storyDiv) {
+          storyDiv.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 300);
+    }, 100);
   }
 
   function removerStory(idx, storyIdx) {
@@ -162,34 +246,57 @@ export default function Requisitos({ template, onEdit }) {
                   onClick={(e) => e.stopPropagation()}
                 />
               ) : (
-                <span className="d-flex align-items-center">
-                  <span className="me-2">{req.titulo}</span>
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    className="ms-1"
-                    style={{
-                      color: "#888",
-                      cursor: "pointer",
-                      padding: "2px 5px",
-                      borderRadius: "3px",
-                      outline: "none",
-                    }}
-                    title="Editar título"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditandoTituloIdx(idx);
-                      setTituloTemp(req.titulo);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
+                <span className="d-flex align-items-center w-100 justify-content-between">
+                  <span className="d-flex align-items-center">
+                    <span className="me-2">{req.titulo}</span>
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      className="ms-1"
+                      style={{
+                        color: "#fff",
+                        cursor: "pointer",
+                        padding: "2px 5px",
+                        borderRadius: "3px",
+                        outline: "none",
+                      }}
+                      title="Editar título"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setEditandoTituloIdx(idx);
                         setTituloTemp(req.titulo);
-                      }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setEditandoTituloIdx(idx);
+                          setTituloTemp(req.titulo);
+                        }
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faPen} />
+                    </span>
+                  </span>
+                  {/* SVG caret branco */}
+                  <span
+                    className="accordion-caret"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      marginLeft: 16,
+                      transition: "transform 0.2s",
+                      transform:
+                        openIdx === idx ? "rotate(180deg)" : "rotate(0deg)",
                     }}
                   >
-                    <FontAwesomeIcon icon={faPen} />
+                    <svg
+                      width="24"
+                      height="24"
+                      fill="white"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M7 10l5 5 5-5z" />
+                    </svg>
                   </span>
                 </span>
               )}
@@ -218,18 +325,30 @@ export default function Requisitos({ template, onEdit }) {
               >
                 <FontAwesomeIcon icon={faPlus} /> Adicionar Story
               </Button>
-              {req.stories.length === 0 && (
-                <div className="text-muted">Nenhuma story adicionada.</div>
-              )}
-              {req.stories.map((story, sIdx) => (
-                <StoryCard
-                  key={sIdx}
-                  story={story}
-                  index={sIdx}
-                  onChange={(newStory) => editarStory(idx, sIdx, newStory)}
-                  onRemove={() => removerStory(idx, sIdx)}
-                />
-              ))}
+
+              {/* Aqui começa o scroll das stories */}
+              <div className="stories-scroll">
+                {req.stories.length === 0 && (
+                  <div className="text-muted">Nenhuma story adicionada.</div>
+                )}
+                {req.stories.map((story, sIdx) => (
+                  <StoryCard
+                    key={sIdx}
+                    story={story}
+                    index={sIdx}
+                    reqIdx={idx}
+                    open={storyOpenIdx[idx] === sIdx}
+                    setOpen={(open) => {
+                      setStoryOpenIdx((old) => ({
+                        ...old,
+                        [idx]: open ? sIdx : null,
+                      }));
+                    }}
+                    onChange={(newStory) => editarStory(idx, sIdx, newStory)}
+                    onRemove={() => removerStory(idx, sIdx)}
+                  />
+                ))}
+              </div>
             </Accordion.Body>
           </Accordion.Item>
         ))}

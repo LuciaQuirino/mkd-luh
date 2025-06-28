@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col, Card, Collapse } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
@@ -9,16 +9,40 @@ import "./UserStory.css";
 
 type Props = {
   story: UserStory;
+  index: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
   onChange: (story: UserStory) => void;
   onRemove: () => void;
-  index: number;
-};
+  reqIdx: number;
+}
 
-export default function StoryCard({ story, onChange, onRemove, index }: Props) {
-  const [open, setOpen] = useState(false);
-
+export default function StoryCard({ story, onChange, onRemove, index, open, setOpen, reqIdx }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [tempRegras, setTempRegras] = useState(story.regrasHTML);
+
+  const cardRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (story.autoOpen && open) {
+      onChange({ ...story, autoOpen: false });
+    }
+  }, [story.autoOpen, open]);
+
+  useEffect(() => {
+    if (open && cardRef.current) {
+      cardRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      cardRef.current.classList.add("destacar-requisito");
+      setTimeout(
+        () => cardRef.current?.classList.remove("destacar-requisito"),
+        1000
+      );
+    }
+  }, [open]);
 
   function abreModal() {
     setTempRegras(story.regrasHTML);
@@ -31,11 +55,12 @@ export default function StoryCard({ story, onChange, onRemove, index }: Props) {
   }
 
   return (
-    <Card className="mb-2">
+    <Card className="mb-2 p-0 story-card" ref={cardRef}>
       <Card.Header
         style={{ cursor: "pointer" }}
-        onClick={() => setOpen((o) => !o)}
-        className="d-flex justify-content-between align-items-center"
+        onClick={() => setOpen(!open)}
+        className="d-flex justify-content-between align-items-center story-card-header"
+        id={`story-${reqIdx}-${index}`}
       >
         <div>
           <FontAwesomeIcon

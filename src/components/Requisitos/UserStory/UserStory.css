@@ -44,3 +44,39 @@
   max-height: 52vh;
   resize: vertical;
 }
+
+.destacar-requisito {
+  animation: destaqueRequisito 1.2s;
+  box-shadow: 0 0 0 4px #4285f4aa;
+  z-index: 2;
+}
+
+@keyframes destaqueRequisito {
+  0%   { box-shadow: 0 0 0 8px #4285f4dd; }
+  80%  { box-shadow: 0 0 0 4px #1a2536; }
+  100% { box-shadow: 0 0 0 0px transparent; }
+}
+
+.story-card-header {
+  background: linear-gradient(90deg, #ffe399 60%, #ffd34f 100%) !important;
+  color: #6d4a00 !important;
+  font-weight: 600;
+  border-radius: 10px 10px 0 0 !important;
+  border: none !important;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  padding-left: 1.3rem;
+  font-size: 1.06rem;
+  letter-spacing: 0.4px;
+  box-shadow: 0 2px 8px #ffd34f24;
+}
+
+.story-card-header .svg-inline--fa {
+  color: #6d4a00 !important;
+}
+
+.story-card {
+  border: 1px solid #ffd34f !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px #ffe39933, 0 1.5px 0 #ffd34f44 inset;
+}
