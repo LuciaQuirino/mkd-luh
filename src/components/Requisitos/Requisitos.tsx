@@ -36,16 +36,20 @@ export default function Requisitos({ template, onEdit }) {
   const [tituloTemp, setTituloTemp] = useState("");
 
   useEffect(() => {
-    itemsRef.current = itemsRef.current.slice(0, template.requisitos.length);
+    template.requisitos.forEach((_, idx) => {
+      const el = document.getElementById(`requisito-${idx}`);
+      if (el && accordionListeners[idx]) {
+        el.removeEventListener("abrirAccordion", accordionListeners[idx]);
+        delete accordionListeners[idx];
+      }
+    });
 
     template.requisitos.forEach((_, idx) => {
       const el = document.getElementById(`requisito-${idx}`);
       if (el) {
-        if (!accordionListeners[idx]) {
-          accordionListeners[idx] = () =>
-            handleAbrirAccordion(idx, el, setOpenIdx);
-          el.addEventListener("abrirAccordion", accordionListeners[idx]);
-        }
+        accordionListeners[idx] = () =>
+          handleAbrirAccordion(idx, el, setOpenIdx);
+        el.addEventListener("abrirAccordion", accordionListeners[idx]);
       }
     });
 
