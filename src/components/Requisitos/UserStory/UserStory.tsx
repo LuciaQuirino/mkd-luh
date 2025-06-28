@@ -55,7 +55,7 @@ export default function StoryCard({ story, onChange, onRemove, index, open, setO
   }
 
   return (
-    <Card className="mb-2 p-0 story-card" ref={cardRef}>
+    <Card className={`mb-2 p-0 story-card${open ? " open" : ""}`} ref={cardRef}>
       <Card.Header
         style={{ cursor: "pointer" }}
         onClick={() => setOpen(!open)}
@@ -74,7 +74,7 @@ export default function StoryCard({ story, onChange, onRemove, index, open, setO
           </span>
         </div>
         <Button
-          className="no-border"
+          className="no-border btn-action"
           variant="outline-danger"
           size="sm"
           onClick={(e) => {

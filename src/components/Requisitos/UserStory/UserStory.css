@@ -80,3 +80,28 @@
   border-radius: 10px !important;
   box-shadow: 0 4px 16px #ffe39933, 0 1.5px 0 #ffd34f44 inset;
 }
+
+.btn-action:hover {
+  background-color: #ffd34f !important;
+  color: white !important;
+}
+
+.btn-action:hover svg {
+  background-color: #ffd34f !important;
+  color: #a78c52 !important;
+}
+
+.story-card.open {
+  border-color: #00000054 !important;
+  filter: brightness(1.04);
+}
+
+.story-card .form-control {
+  background: #fffbe8 !important;
+  border: 1px solid #00000054 !important;
+  color: #000000;
+  border-radius: 7px !important;
+  font-weight: 500;
+  box-shadow: 0 1px 4px #00000011;
+  transition: border-color .16s, box-shadow .14s;
+}
