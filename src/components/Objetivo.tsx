@@ -158,6 +158,7 @@ export default function Objetivo({ template, onEdit }) {
                     onClick={() => removerItem(idx)}
                     style={{ minWidth: 28, padding: 0, border: 'none !important' }}
                     aria-label={`Remover ${item}`}
+                    className="no-border"
                   >
                     <FontAwesomeIcon icon={faXmark} />
                   </Button>
