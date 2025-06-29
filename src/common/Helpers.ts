@@ -51,7 +51,7 @@ ${template.versoes
 ${story.introducao || ""}
 - **Sistema:** ${story.sistema || "-"}
 - **Caminho:** ${story.caminho || "-"}
-${regrasMarkdown ? `- **Regras:**\n${regrasMarkdown}` : ""}
+${regrasMarkdown ? `- **Regras:**\n\n\n${regrasMarkdown}` : ""}
 `;
 
 if (story.temFuncionalidade) {

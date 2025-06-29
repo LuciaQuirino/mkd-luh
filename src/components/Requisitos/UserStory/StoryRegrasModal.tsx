@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState,useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import ReactSimpleWysiwyg from "react-simple-wysiwyg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,22 @@ import "./UserStory.css";
 export default function StoryRegrasModal({ story, onChange }) {
   const [showModal, setShowModal] = useState(false);
   const [tempRegras, setTempRegras] = useState(story.regrasHTML || "");
+  const [status, setStatus] = useState("idle"); 
+
+  useEffect(() => {
+    if (tempRegras === story.regrasHTML) return;
+
+    setStatus("saving");
+
+    const timeout = setTimeout(() => {
+      onChange({ ...story, regrasHTML: tempRegras });
+      setStatus("saved");
+
+      setTimeout(() => setStatus("idle"), 2000);
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  }, [tempRegras]);
 
   function abreModal() {
     setTempRegras(story.regrasHTML || "");
@@ -49,17 +65,15 @@ export default function StoryRegrasModal({ story, onChange }) {
           <Modal.Title>Editar Regras de Negócio</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="editor-wrapper">
+          <div>
             <ReactSimpleWysiwyg
               value={tempRegras}
               onChange={(e) => setTempRegras(e.target.value)}
               style={{
-                minHeight: 350,
-                maxHeight: 500,
+                minHeight: 300,
                 fontSize: 14,
                 background: "#fff",
-                overflowY: "auto",
-                padding: 0,
+                padding: 8,
               }}
               toolbar={{
                 bold: true,
@@ -72,12 +86,20 @@ export default function StoryRegrasModal({ story, onChange }) {
             />
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={salvaModal}>
-            Salvar
+        <Modal.Footer className="justify-content-between">
+          <div
+            style={{
+              fontSize: 14,
+              color:
+                status === "saved" || status === "idle" ? "#28a745" : "#333",
+            }}
+          >
+            {status === "saving" && "Salvando..."}
+            {status === "saved" && "Salvo ✓"}
+            {status === "idle" && "Pronto"}
+          </div>
+          <Button className="btn-sm no-border" variant="outline-secondary" onClick={() => setShowModal(false)}>
+            Fechar
           </Button>
         </Modal.Footer>
       </Modal>

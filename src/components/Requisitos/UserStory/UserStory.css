@@ -4,14 +4,25 @@
 }
 
 .rsw-editor {
-  resize: none !important;
+  resize: vertical !important;
   min-height: 80px;
-  max-height: 350px;
-  overflow: hidden !important;
+  max-height: 400px;
 }
 
 .rsw-ce div {
     font-size: 18px !important
+}
+
+.rsw-editor {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.rsw-ce {
+  max-height: 52vh !important;
+  overflow-y: auto !important;
+  padding: 8px;
 }
 
 .modal-alta-regras .modal-dialog {
@@ -26,9 +37,9 @@
 }
 
 .editor-wrapper {
-  position: relative;
-  height: 60vh;
-  min-height: 360px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .editor-wrapper .rsw-toolbar {
@@ -43,6 +54,13 @@
   min-height: 260px;
   max-height: 52vh;
   resize: vertical;
+}
+
+.rsw-editor {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 0 !important;
 }
 
 .destacar-requisito {
@@ -104,4 +122,67 @@
   font-weight: 500;
   box-shadow: 0 1px 4px #00000011;
   transition: border-color .16s, box-shadow .14s;
+}
+
+.rsw-toolbar button[title="HTML mode"] {
+  display: none !important;
+}
+
+/* Cor de fundo e borda da toolbar */
+.rsw-toolbar {
+  background-color: #f0f0f0 !important;
+  border-bottom: 1px solid #ccc;
+  padding: 4px 8px;
+}
+
+/* Botões individuais */
+.rsw-toolbar button {
+  background: none;
+  border: none;
+  margin: 0 4px;
+  padding: 4px 6px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.rsw-toolbar button:hover {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+}
+
+/* Botão ativo (opcional) */
+.rsw-toolbar button.active {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-radius: 4px;
+}
+
+/* Dropdown de estilos */
+.rsw-toolbar select {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+}
+
+.rsw-ce::-webkit-scrollbar {
+  width: 8px;
+}
+
+.rsw-ce::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.rsw-ce::-webkit-scrollbar-thumb {
+  background-color: #bcbcbc;
+  border-radius: 4px;
+  border: 2px solid #f0f0f0;
+}
+
+.rsw-ce::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
 }
