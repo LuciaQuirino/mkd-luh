@@ -32,8 +32,35 @@ ${template.versoes
 
   const foraEscopo =
     (template.foraEscopo || []).length > 0
-      ? (template.foraEscopo || []).map((e) => `- ${e}`).join('\n')
-      : '*Nenhum item fora do escopo*';
+      ? (template.foraEscopo || []).map((e) => `- ${e}`).join("\n")
+      : "*Nenhum item fora do escopo*";
+
+  turndown.addRule("table", {
+    filter: ["table"],
+    replacement: function (content, node) {
+      let rows = Array.from(node.querySelectorAll("tr"));
+
+      if (!rows.length) return "";
+
+      const headers = Array.from(rows.shift().querySelectorAll("th, td")).map(
+        (cell) => `**${cell.textContent.trim()}**`
+      );
+
+      const separator = headers.map(() => "---");
+
+      const body = rows.map((row) =>
+        Array.from(row.querySelectorAll("td, th"))
+          .map((cell) => cell.textContent.trim())
+          .join(" | ")
+      );
+
+      return `
+${headers.join(" | ")}
+${separator.join(" | ")}
+${body.join("\n")}
+`;
+    },
+  });
 
   // REQUISITOS
   let requisitosMd = '';

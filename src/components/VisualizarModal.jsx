@@ -17,7 +17,7 @@ export default function VisualizarModal({ show, onClose, markdown }) {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
+        <Button className="btn-sm no-border" variant="outline-secondary" onClick={onClose}>
           Fechar
         </Button>
       </Modal.Footer>
