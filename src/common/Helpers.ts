@@ -100,10 +100,8 @@ requisitosMd += '\n\n\n';
   if (!requisitosMd.trim()) requisitosMd = "*Nenhum requisito cadastrado*";
 
   return `
-# ${template.nome || ''}
+# ${timesSelecionados ? timesSelecionados : ''} ${template.projeto || ''}
 
-${timesSelecionados ? `**Times:** ${timesSelecionados}\n` : ''}
-**Projeto:** ${template.projeto || '-'}  
 **Escopo do Projeto:** ${template.escopoProjeto || '-'}  
 **Análise de Requisitos:** ${template.analiseRequisitos || '-'}
 

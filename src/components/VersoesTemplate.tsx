@@ -24,7 +24,8 @@ export default function Versoes({ template, onEdit }) {
 
   useEffect(() => {
     if (template.data) {
-      setData(new Date(template.data));
+      const [ano, mes, dia] = template.data.split("-");
+      setData(new Date(ano, mes - 1, dia));
     }
   }, [template.data]);
 
@@ -33,9 +34,14 @@ export default function Versoes({ template, onEdit }) {
     
     const nova = {
       versao,
-      data: data instanceof Date ? data.toISOString().split("T")[0] : "",
+      data:
+        data instanceof Date
+          ? `${data.getFullYear()}-${(data.getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}-${data.getDate().toString().padStart(2, "0")}`
+          : "",
       autor,
-      alteracoes
+      alteracoes,
     };
 
     onEdit({ versoes: [...template.versoes, nova] });
